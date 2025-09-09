@@ -1,0 +1,41 @@
+<!DOCTYPE aesl-source>
+<network>
+
+
+<!--list of global events-->
+
+
+<!--node Thymio_2 on LAPTOP-R6DLKAFN - 20920-->
+<node nodeId="{104a2ee4-2636-42cb-b106-296a173898e9}" name="Thymio_2 on LAPTOP-R6DLKAFN - 20920"><![CDATA[var speed=200
+var brake=0
+
+
+sub move
+	motor.left.target = speed
+	motor.right.target = speed
+
+sub left
+		motor.left.target = 100
+		motor.right.target = speed
+		
+sub right 
+		motor.left.target = speed
+		motor.right.target = 100
+				
+sub follow_line
+	if prox.ground.delta[0] <100 and prox.ground.delta[1] <100 then
+		callsub move
+		end
+	if prox.ground.delta[0] <85 and prox.ground.delta[1] >100 then	
+		callsub left
+
+	end
+	if prox.ground.delta[0] >85 and prox.ground.delta[1] <100 then
+		callsub right
+	end
+
+onevent prox
+callsub follow_line]]></node>
+
+
+</network>

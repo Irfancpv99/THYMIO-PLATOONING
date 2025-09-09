@@ -1,0 +1,73 @@
+<!DOCTYPE aesl-source>
+<network>
+
+
+<!--list of global events-->
+
+
+<!--node Thymio_3 on LAPTOP-R6DLKAFN - 8636-->
+<node nodeId="{685d7bc4-5149-44e6-b733-ac83cc21ac38}" name="Thymio_3 on LAPTOP-R6DLKAFN - 8636"><![CDATA[
+var overtaking = 0
+var speed = 300
+var platoon_leader = 0
+
+
+call prox.comm.enable(1)
+call sound.system(-1)
+call leds.top(0, 0, 0)
+call leds.bottom.left(0, 0, 0)
+call leds.bottom.right(0, 0, 0)
+call leds.circle(0, 0, 0, 0, 0, 0, 0, 0)
+
+sub move
+  motor.left.target = speed
+  motor.right.target = speed
+
+sub left
+  motor.left.target = 50
+  motor.right.target = speed
+
+sub right
+  motor.left.target = speed
+  motor.right.target = 50
+
+sub follow_line
+  if prox.ground.delta[0] < 100 and prox.ground.delta[1] < 100 then
+    callsub move
+  end
+  if prox.ground.delta[0] < 100 and prox.ground.delta[1] > 100 then
+    callsub left
+  end
+  if prox.ground.delta[0] > 100 and prox.ground.delta[1] < 100 then
+    callsub right
+  end
+  
+    
+  
+
+onevent prox
+  if overtaking == 0 then
+    callsub follow_line
+  end
+
+  if prox.horizontal[3] > 500 then
+    call leds.top(0, 100, 0)
+    callsub left
+    overtaking = 1
+  else
+    call leds.top(0, 0, 0)
+  end
+
+  if prox.horizontal[0] > 500 then
+    callsub right
+  end
+
+  if overtaking == 1 then
+    if prox.ground.delta[0] > 100 or prox.ground.delta[1] > 100 then
+      overtaking = 0
+    end
+  end
+]]></node>
+
+
+</network>

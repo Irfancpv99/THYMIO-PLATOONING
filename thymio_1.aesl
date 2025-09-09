@@ -1,0 +1,45 @@
+<!DOCTYPE aesl-source>
+<network>
+
+
+<!--list of global events-->
+
+
+<!--node Thymio_1 on LAPTOP-R6DLKAFN - 20920-->
+<node nodeId="{1c3c0bf0-4667-4ac4-94bd-f218d8aa58d4}" name="Thymio_1 on LAPTOP-R6DLKAFN - 20920"><![CDATA[var black_level = 200
+var white_level = 500
+var speed = 150
+var left_sensor
+var right_sensor
+ 
+ 
+timer.period[0] = 50
+
+onevent timer0
+   left_sensor = prox.ground.delta[0]
+   right_sensor = prox.ground.delta[1]
+   motor.left.target = 0
+   motor.right.target = 0
+  
+  if left_sensor < black_level or right_sensor < black_level then
+    # if one sensor is on the black line, set normal speed
+    motor.left.target= speed
+    motor.right.target = speed
+    
+    if left_sensor < black_level then
+      # Left sensor is on the black line, so slow down the left motor to turn right
+    motor.left.target = speed / 2
+    end
+    
+    if right_sensor < black_level then
+      # Right sensor is on the black line, so slow down the right motor to turn left
+     motor.right.target= speed / 2
+    end
+  else
+    # Both sensors are off the black line, stop the motors
+  motor.left.target = 0
+    motor.right.target = 0
+  end]]></node>
+
+
+</network>
